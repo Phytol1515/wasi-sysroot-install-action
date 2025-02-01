@@ -1,0 +1,25 @@
+name: 'Install WASI SDK Components for compiling WASM32'
+description: 'Installs `wasi-sysroot` from the latest `WebAssembly/wasi-sdk` release'
+author: 'Pekka Ilmari Nikander (with ChatGPT-4o)'
+
+inputs:
+  wasi-sdk-version:
+    description: 'The version of wasi-sdk to install (default: latest)'
+    required: false
+    default: 'latest'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Determine WASI SDK version
+      id: get_version
+      run: |
+        ${{ github.action_path }}/determine-wasi-sdk-version.sh ${{ inputs.wasi-sdk-version }}
+    - name: Cache WASI SDK sysroot
+      uses: actions/cache@v4
+      with:
+        path: .github/cache
+        key: wasi-sysroot-${{ steps.get_version.outputs.version }}
+    - name: Install WASI SDK sysroot
+      shell: bash
+      run: ${{ github.action_path }}/entrypoint.sh 
