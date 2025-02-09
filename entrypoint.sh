@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_PREFIX=${WASI_INSTALL_PREFIX:-/opt}
-SYSROOT_DIR="${INSTALL_PREFIX}/wasi-sysroot"
+WASI_SYSROOT="${WASI_SYSROOT:-/opt/wasi-sysroot}"
 CACHE_PATH=.github/cache
 CACHE_FILE=${CACHE_PATH}/wasi-sysroot.tar.gz
 WASI_SDK_VERSION=${WASI_SDK_VERSION:-latest}
@@ -18,9 +17,9 @@ else
 fi
 
 echo "::group::Extracting and installing WASI sysroot"
-mkdir -p "$SYSROOT_DIR"
-tar -xzf ${CACHE_FILE} -C "$SYSROOT_DIR" --strip-components=1
-echo "WASI_SYSROOT=$SYSROOT_DIR" >> "$GITHUB_ENV"
+mkdir -p "$WASI_SYSROOT"
+tar -xzf ${CACHE_FILE} -C "$WASI_SYSROOT" --strip-components=1
+echo "WASI_SYSROOT=$WASI_SYSROOT" >> "$GITHUB_ENV"
 echo "::endgroup::"
 
 echo "Installation complete."
